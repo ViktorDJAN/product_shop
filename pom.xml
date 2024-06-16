@@ -17,6 +17,7 @@
 	<modules>
 		<module>order-service</module>
 		<module>product-service</module>
+		<module>inventory-service</module>
 	</modules>
 	<name>main-area-micro-services</name>
 	<description>General part including many other modules</description>
