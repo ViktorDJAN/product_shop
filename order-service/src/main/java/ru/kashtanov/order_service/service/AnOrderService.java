@@ -25,7 +25,9 @@ public class AnOrderService {
 
 
     public void makeAnOrder(AnOrderRequestDto orderRequestDto) {
+        //Creating an Order
         AnOrder anOrder = new AnOrder();
+
         anOrder.setOrderNumber(orderRequestDto.getOrderNumber());
 
         List<OrderLineItems> orderLineItemsList = orderRequestDto
@@ -40,20 +42,20 @@ public class AnOrderService {
                 .collect(Collectors.toList());
 
         // Here we appeal to Inventory-service for checking inventory is in stock or not
-//        InventoryResponse [] inventoryResponseArray = webClient.get()
-//                .uri("http://localhost:8084/api/v1/inventory_scope/is_in_stock",
-//                        uriBuilder -> uriBuilder.queryParam("skuCode",skuCodes).build())
-//                .retrieve()
-//                .bodyToMono(InventoryResponse[].class)
-//                .block();
-//        boolean resultIsInStock = Arrays.stream(inventoryResponseArray)
-//                .allMatch(inventoryResponse -> inventoryResponse.isInStock()); // one of items is false => false
-//
-//        if(resultIsInStock){
+        InventoryResponse [] inventoryResponseArray = webClient.get()
+                .uri("http://localhost:8084/api/v1/inventory_scope/is_in_stock",
+                        uriBuilder -> uriBuilder.queryParam("skuCode",skuCodes).build())
+                .retrieve()
+                .bodyToMono(InventoryResponse[].class)
+                .block();
+        boolean resultIsInStock = Arrays.stream(inventoryResponseArray)
+                .allMatch(inventoryResponse -> inventoryResponse.isInStock()); // one of items is false => false
+
+        if(resultIsInStock){
             orderRepository.save(anOrder);
-//        }else {
-//            throw new IllegalStateException("There is not such inventory in the common stock");
-//        }
+        }else {
+            throw new IllegalStateException("There is not such inventory in the common stock");
+        }
 
 
         System.out.println("The order is successfully placed " + anOrder.getOrderId());
