@@ -3,6 +3,7 @@ package ru.kashtanov.order_service.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.kashtanov.order_service.dto.AnOrderRequestDto;
+import ru.kashtanov.order_service.dto.OrderLineItemsDto;
 import ru.kashtanov.order_service.model.AnOrder;
 import ru.kashtanov.order_service.model.OrderLineItems;
 import ru.kashtanov.order_service.service.AnOrderService;
@@ -20,11 +21,15 @@ public class OrderController {
     }
 
     @GetMapping("/single")
-    public AnOrder getSingle(){
-        OrderLineItems oli = new OrderLineItems(1L,"skuCode_1",10.0,10);
-        List<OrderLineItems>orderLineItems = new ArrayList<>();
-        orderLineItems.add(oli);
-        return new AnOrder(1L,"A001",orderLineItems);
+    public AnOrderRequestDto getSingle(){
+
+        List<OrderLineItemsDto>orderLineItems = new ArrayList<>();
+        OrderLineItemsDto itemsDto = new OrderLineItemsDto("OO1",10.2,5);
+        orderLineItems.add(itemsDto);
+
+        AnOrderRequestDto anOrderRequestDto = new AnOrderRequestDto("A01",orderLineItems);
+
+        return anOrderRequestDto;
     }
 
     @PostMapping("/place_order")
