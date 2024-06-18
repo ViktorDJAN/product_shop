@@ -19,6 +19,7 @@
         <module>product-service</module>
         <module>inventory-service</module>
         <module>discovery-server</module>
+        <module>gateway-api</module>
 
     </modules>
     <name>main-area-micro-services</name>
