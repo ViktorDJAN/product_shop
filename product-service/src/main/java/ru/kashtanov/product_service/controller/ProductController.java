@@ -12,7 +12,7 @@ import ru.kashtanov.product_service.service.ProductService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product_scope")
+@RequestMapping("/api/v1/product_scope")
 public class ProductController {
     private final ProductService productService;
 

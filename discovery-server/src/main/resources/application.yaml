@@ -6,4 +6,4 @@ eureka:
     register-with-eureka: false  # one doesn't need to register itself as a client(It means about discovery-server)
     fetch-registry: false
 server:
-  port: 8761 # is the default port where Eureka runs
+  port: 8761 # is the default port where Eureka runs  (It's optional)
