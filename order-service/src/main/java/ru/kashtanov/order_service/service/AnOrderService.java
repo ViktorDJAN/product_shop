@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class AnOrderService {
     private final AnOrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
-    public AnOrderService(AnOrderRepository orderRepository, WebClient webClient) {
+    public AnOrderService(AnOrderRepository orderRepository, WebClient.Builder webClientBuilder) {
         this.orderRepository = orderRepository;
-        this.webClient = webClient;
+
+        this.webClientBuilder = webClientBuilder;
     }
 
 
@@ -43,8 +44,8 @@ public class AnOrderService {
 
         // Call Inventory-service ,and place the order if the product is in the stock
         // Here we appeal to Inventory-service for checking inventory is in stock or not
-        InventoryResponse[] inventoryResponseArray = webClient.get()
-                .uri("http://localhost:8084/api/v1/inventory_scope/is_in_stock",
+        InventoryResponse[] inventoryResponseArray = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/v1/inventory_scope/is_in_stock",
                         uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)

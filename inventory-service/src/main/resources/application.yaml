@@ -4,13 +4,15 @@ spring:
     username: inventory
     password: inventory
     driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: "inventory-service"
 
   jpa:
     hibernate:
       ddl-auto: update
 
 server:
-  port: 8084
+  port: 0
 
 eureka:
   client:
