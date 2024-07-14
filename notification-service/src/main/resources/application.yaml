@@ -1,0 +1,22 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+server:
+  port: 0
+spring:
+  kafka:
+    bootstrap-servers: localhost:29092
+    template:
+      default-topic: "notification_topic"
+
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+      properties:
+        spring.json.type.mapping: "event:ru.kashtanov.notification_service.event.OrderPlacedEvent"
+      group-id: "notificationId"
+
+
+

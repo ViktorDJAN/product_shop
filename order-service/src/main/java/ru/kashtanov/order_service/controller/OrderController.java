@@ -1,5 +1,7 @@
 package ru.kashtanov.order_service.controller;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.kashtanov.order_service.dto.AnOrderRequestDto;
@@ -10,6 +12,7 @@ import ru.kashtanov.order_service.service.AnOrderService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/v1/order_scope")
@@ -26,17 +29,20 @@ public class OrderController {
         List<OrderLineItemsDto>orderLineItems = new ArrayList<>();
         OrderLineItemsDto itemsDto = new OrderLineItemsDto("OO1",10.2,5);
         orderLineItems.add(itemsDto);
-
-        AnOrderRequestDto anOrderRequestDto = new AnOrderRequestDto("A01",orderLineItems);
-
-        return anOrderRequestDto;
+        return new AnOrderRequestDto("A01",orderLineItems);
     }
 
     @PostMapping("/place_order")
     @ResponseStatus(HttpStatus.CREATED)
-    public String placeAnOrder(@RequestBody AnOrderRequestDto anOrderRequestDto){
+    @CircuitBreaker(name="inventory",fallbackMethod = "fallbackMethod")
+    @TimeLimiter(name="inventory")
+    public CompletableFuture<String> placeAnOrder(@RequestBody AnOrderRequestDto anOrderRequestDto){
         orderService.makeAnOrder(anOrderRequestDto);
-        return "The order is placed successfully";
+        return CompletableFuture.supplyAsync(()->"The order is placed successfully");
+    }
+
+    public CompletableFuture<String>  fallbackMethod(AnOrderRequestDto orderRequestDto,RuntimeException runtimeException){
+        return CompletableFuture.supplyAsync(()->"Oops! Something went wrong, please order some time!");
     }
 
     @GetMapping("/all")

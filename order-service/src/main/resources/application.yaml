@@ -12,6 +12,16 @@ spring:
     hibernate:
       ddl-auto: update
 
+# Kafka Properties
+  kafka:
+    bootstrap-servers: localhost:29092
+    template:
+      default-topic: "notification_topic"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: "event:ru.kashtanov.order_service.event.OrderPlacedEvent"
 
 
 server:
@@ -22,4 +32,38 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+
+# Resilience4j Properties
+resilience4j:
+  circuitbreaker:
+    instances:
+      inventory:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
+        permitted-number-of-calls-in-half-open-state: 3 # number of calls to services for state changing
+        automatic-transition-from-open-to-half-open-enabled: true
+
+
+# Resilience4J Timeout Properties
+  timelimiter:
+    instances:
+      inventory:
+        timeout-duration: 3s
+
 
