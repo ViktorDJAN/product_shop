@@ -1,6 +1,6 @@
 # Product shop
 
-This application represents itself as micro-services aplication able to implement various functional
+This application represents itself as micro-services application able to implement various functional
 The following stack of technologies was used here:
 * Java 17
 * Spring Boot
